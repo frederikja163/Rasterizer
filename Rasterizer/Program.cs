@@ -7,7 +7,7 @@ namespace Rasterizer
     {
         static void Main(string[] args)
         {
-            Application app = new Application(2);
+            Application app = new Application();
             app.Run();
             app.Dispose();
         }

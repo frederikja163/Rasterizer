@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using OpenTK.Mathematics;
-using Rasterizer.Engine;
 
-namespace Rasterizer
+namespace Rasterizer.Engine
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct Framebuffer

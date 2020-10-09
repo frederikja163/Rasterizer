@@ -5,32 +5,12 @@ namespace Rasterizer.Engine
 {
     public sealed class OpenGLRasterizer : ContextBase
     {
-        private static readonly string VertexSrc = @"
-            #version 330 core
-            in layout(location = 0) vec2 vPos;
-
-            void main()
-            {
-                gl_Position = vec4(vPos, 0, 1);
-            }
-";
-
-        private static readonly string FragmentSrc = @"
-            #version 330 core
-            
-            out vec4 Color;
-            void main()
-            {
-                Color = vec4(0, 1, 1, 1);
-            }
-";
-
         private readonly int _shader, _vbo, _vao;
         
         
         public unsafe OpenGLRasterizer() : base("Opengl rasterizer")
         {
-            _shader = Utility.CreateShader(in VertexSrc, in FragmentSrc);
+            _shader = Utility.CreateShader(in Config.VertexSrc, in Config.FragmentSrc);
             
             _vao = GL.GenVertexArray();
             GL.BindVertexArray(_vao);

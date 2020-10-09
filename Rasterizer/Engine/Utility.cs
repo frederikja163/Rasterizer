@@ -5,6 +5,16 @@ namespace Rasterizer.Engine
 {
     public static class Utility
     {
+        public static float Max(float v1, float v2, float v3)
+        {
+            return MathF.Max(v1, MathF.Max(v2, v3));
+        }
+        
+        public static float Min(float v1, float v2, float v3)
+        {
+            return MathF.Min(v1, MathF.Min(v2, v3));
+        }
+        
         public static int CreateShader(in string vertexSrc, in string fragmentSrc)
         {
             int CreateShader(in string src, ShaderType type)

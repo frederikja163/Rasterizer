@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenTK.Mathematics;
 using Rasterizer.Engine;
 
 namespace Rasterizer
@@ -11,7 +12,7 @@ namespace Rasterizer
         DepthBuffer = 0x02,
         All = None | ColorBuffer | DepthBuffer
     }
-    
+
     public sealed class Pipeline : CustomPipelineBase
     {
         private Framebuffer _framebuffer;
@@ -25,7 +26,22 @@ namespace Rasterizer
         {
             Clear(ClearMask.ColorBuffer);
             
+            DrawBuffer(triangles);
+            
             SwapBuffers();
+        }
+
+        public void DrawBuffer(Triangle[] triangles)
+        {
+            for (int i = 0; i < triangles.Length; i++)
+            {
+                var triangle = triangles[i];
+                var vert1 = Config.VertexShader(triangle.Vert1);
+                var vert2 = Config.VertexShader(triangle.Vert2);
+                var vert3 = Config.VertexShader(triangle.Vert3);
+                
+                //Rasterize
+            }
         }
 
         public void Clear(ClearMask mask)

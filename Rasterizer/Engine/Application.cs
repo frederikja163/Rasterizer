@@ -1,13 +1,12 @@
 ﻿using System;
-using OpenTK.Graphics.OpenGL4;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
-namespace Rasterizer
+namespace Rasterizer.Engine
 {
     public sealed unsafe class Application : IDisposable
     {
         private readonly OpenGLRasterizer _openGlRasterizer;
-        private readonly CustomRasterizer _customRasterizer;
+        private readonly CustomPipelineBase _customPipelineBase;
         
         public Application()
         {
@@ -30,17 +29,18 @@ namespace Rasterizer
                 triangles[i] = new Triangle(Rand(), Rand(), Rand(), Rand(), Rand(), Rand());
             }
             _openGlRasterizer = new OpenGLRasterizer(triangles);
-            _customRasterizer = new CustomRasterizer(triangles);
+            _customPipelineBase = new Pipeline("custom pipeline");
             
         }
 
         public void Run()
         {
-            while (!_openGlRasterizer.ShouldClose() && !_customRasterizer.ShouldClose())
+            while (!_openGlRasterizer.ShouldClose() && !_customPipelineBase.ShouldClose())
             {
+                //TODO: Pass triangles here
                 _openGlRasterizer.Render();
                 
-                _customRasterizer.Render();
+                _customPipelineBase.Render();
                 
                 GLFW.PollEvents();
             }
@@ -49,7 +49,7 @@ namespace Rasterizer
         public void Dispose()
         {
             _openGlRasterizer.Dispose();
-            _customRasterizer.Dispose();
+            _customPipelineBase.Dispose();
             GLFW.Terminate();
         }
     }

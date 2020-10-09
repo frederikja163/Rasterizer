@@ -1,7 +1,7 @@
 ﻿using System;
 using OpenTK.Graphics.OpenGL4;
 
-namespace Rasterizer
+namespace Rasterizer.Engine
 {
     public static class Utility
     {

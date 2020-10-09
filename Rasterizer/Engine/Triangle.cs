@@ -1,7 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using OpenTK.Mathematics;
 
-namespace Rasterizer
+namespace Rasterizer.Engine
 {
     [StructLayout(LayoutKind.Sequential)]
     public readonly struct Triangle

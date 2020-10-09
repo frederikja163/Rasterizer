@@ -2,23 +2,23 @@
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
-namespace Rasterizer
+namespace Rasterizer.Engine
 {
-    public abstract unsafe class Rasterizer : IDisposable
+    public abstract unsafe class ContextBase : IDisposable
     {
         private static bool _hasInitializedOpengl;
         private readonly Window* _window;
         
-        protected Rasterizer(string title)
+        protected ContextBase(string title)
         {
-            _window = GLFW.CreateWindow(800, 600, title, null, null);
+            _window = GLFW.CreateWindow(Config.Width, Config.Height, title, null, null);
             MakeCurrent();
             if (!_hasInitializedOpengl)
             {
                 _hasInitializedOpengl = true;
                 GL.LoadBindings(new GLFWBindingsContext());
             }
-            GL.ClearColor(1, 0, 1, 1);
+            GL.ClearColor(Config.ClearColor);
         }
 
         public void Render()

@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace Rasterizer
 {
@@ -6,7 +7,9 @@ namespace Rasterizer
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Application app = new Application(2);
+            app.Run();
+            app.Dispose();
         }
     }
 }

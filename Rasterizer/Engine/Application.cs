@@ -6,7 +6,8 @@ namespace Rasterizer.Engine
     public sealed unsafe class Application : IDisposable
     {
         private readonly OpenGLRasterizer _openGlRasterizer;
-        private readonly CustomPipelineBase _customPipelineBase;
+        private readonly Pipeline _customPipelineBase;
+        private readonly Triangle[] _triangle;
         
         public Application()
         {
@@ -18,17 +19,17 @@ namespace Rasterizer.Engine
             GLFW.WindowHint(WindowHintBool.Resizable, false);
             
             var random = new Random(DateTime.Now.Millisecond + DateTime.Now.Hour * 10000 + DateTime.Now.Day * 1000000);
-            var triangles = new Triangle[Config.TriangleCount];
+            _triangle = new Triangle[Config.TriangleCount];
 
             float Rand()
             {
                 return (random.Next() / (float)int.MaxValue) * 2 - 1;
             }
-            for (int i = 0; i < triangles.Length; i++)
+            for (int i = 0; i < _triangle.Length; i++)
             {
-                triangles[i] = new Triangle(Rand(), Rand(), Rand(), Rand(), Rand(), Rand());
+                _triangle[i] = new Triangle(Rand(), Rand(), Rand(), Rand(), Rand(), Rand());
             }
-            _openGlRasterizer = new OpenGLRasterizer(triangles);
+            _openGlRasterizer = new OpenGLRasterizer();
             _customPipelineBase = new Pipeline("custom pipeline");
             
         }
@@ -37,10 +38,9 @@ namespace Rasterizer.Engine
         {
             while (!_openGlRasterizer.ShouldClose() && !_customPipelineBase.ShouldClose())
             {
-                //TODO: Pass triangles here
-                _openGlRasterizer.Render();
+                _openGlRasterizer.Render(_triangle);
                 
-                _customPipelineBase.Render();
+                _customPipelineBase.Render(_triangle);
                 
                 GLFW.PollEvents();
             }

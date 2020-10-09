@@ -14,15 +14,14 @@ namespace Rasterizer
     
     public sealed class Pipeline : CustomPipelineBase
     {
-        private Framebuffer _framebuffer = new Framebuffer(Config.Width, Config.Height);
-
-        protected override ref Framebuffer Framebuffer => ref _framebuffer;
+        private Framebuffer _framebuffer;
         
         public Pipeline(string title) : base(title)
         {
+            _framebuffer = new Framebuffer(Config.Width, Config.Height);
         }
 
-        protected override void OnRender()
+        protected override void OnRender(Triangle[] triangles)
         {
             Clear(ClearMask.ColorBuffer);
             
@@ -43,7 +42,7 @@ namespace Rasterizer
 
         public void SwapBuffers()
         {
-            base.OnRender();
+            base.Draw(ref _framebuffer);
         }
     }
 }

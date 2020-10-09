@@ -1,4 +1,5 @@
-﻿using OpenTK.Graphics.OpenGL4;
+﻿using System;
+using OpenTK.Graphics.OpenGL4;
 
 namespace Rasterizer.Engine
 {
@@ -24,30 +25,31 @@ namespace Rasterizer.Engine
             }
 ";
 
-        private readonly int _shader, _vbo, _vao,
-            _triangleCount;
+        private readonly int _shader, _vbo, _vao;
         
         
-        public unsafe OpenGLRasterizer(Triangle[] triangles) : base("Opengl rasterizer")
+        public unsafe OpenGLRasterizer() : base("Opengl rasterizer")
         {
             _shader = Utility.CreateShader(in VertexSrc, in FragmentSrc);
-            _triangleCount = triangles.Length;
             
             _vao = GL.GenVertexArray();
             GL.BindVertexArray(_vao);
             
             _vbo = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo);
-            GL.BufferData(BufferTarget.ArrayBuffer, sizeof(Triangle) * triangles.Length, triangles, BufferUsageHint.StaticDraw);
+            int size = sizeof(Triangle) * Config.TriangleCount;
+            GL.BufferData(BufferTarget.ArrayBuffer, size, new float[size], BufferUsageHint.StaticDraw);
             GL.EnableVertexAttribArray(0);
             GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, sizeof(Triangle) / 3, 0);
         }
 
-        protected override void OnRender()
+        protected override unsafe void OnRender(Triangle[] triangles)
         {
             GL.UseProgram(_shader);
             GL.BindVertexArray(_vao);
-            GL.DrawArrays(PrimitiveType.Triangles, 0, _triangleCount * 3);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo);
+            GL.BufferSubData(BufferTarget.ArrayBuffer, IntPtr.Zero, sizeof(Triangle) * triangles.Length, triangles);
+            GL.DrawArrays(PrimitiveType.Triangles, 0, triangles.Length * 3);
         }
 
         public override void Dispose()

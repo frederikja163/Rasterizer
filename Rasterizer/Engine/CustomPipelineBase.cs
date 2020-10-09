@@ -33,8 +33,6 @@ namespace Rasterizer.Engine
 
         private readonly int _shader, _vbo, _vao, _texture;
 
-        protected abstract ref Framebuffer Framebuffer { get; }
-
         protected unsafe CustomPipelineBase(string title) : base(title)
         {
             var triangle = new Triangle(-1, -1, 3, -1, -1, 3);
@@ -52,20 +50,20 @@ namespace Rasterizer.Engine
             _texture = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2D, _texture);
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, Config.Width, Config.Height, 0,
-                PixelFormat.Rgba, PixelType.Float, ref Framebuffer.GetColorPtr());
+                PixelFormat.Rgba, PixelType.Float, new Color4[Config.Width * Config.Height]);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
             GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
         }
 
-        protected override void OnRender()
+        protected void Draw(ref Framebuffer framebuffer)
         {
             GL.UseProgram(_shader);
             GL.Uniform1(1, 0);
             GL.BindVertexArray(_vao);
             GL.ActiveTexture(TextureUnit.Texture0);
             GL.BindTexture(TextureTarget.Texture2D, _texture);
-            GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, Config.Width, Config.Height, PixelFormat.Rgba, PixelType.Float, ref Framebuffer.GetColorPtr());
+            GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, Config.Width, Config.Height, PixelFormat.Rgba, PixelType.Float, ref framebuffer.GetColorPtr());
             GL.DrawArrays(PrimitiveType.Triangles, 0, 3);
         }
 

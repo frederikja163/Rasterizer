@@ -21,15 +21,15 @@ namespace Rasterizer.Engine
             GL.ClearColor(Config.ClearColor);
         }
 
-        public void Render()
+        public void Render(Triangle[] triangles)
         {
             MakeCurrent();
             GL.Clear(ClearBufferMask.ColorBufferBit);
-            OnRender();
+            OnRender(triangles);
             GLFW.SwapBuffers(_window);
         }
 
-        protected abstract void OnRender();
+        protected abstract void OnRender(Triangle[] triangles);
 
         public bool ShouldClose()
         {

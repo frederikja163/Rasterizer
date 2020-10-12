@@ -14,19 +14,23 @@ namespace Rasterizer
         public static readonly string VertexSrc = @"
             #version 330 core
             in layout(location = 0) vec2 vPos;
+            in layout(location = 1) vec4 vColor;
 
+            out vec4 fColor;
             void main()
             {
                 gl_Position = vec4(vPos, 0, 1);
+                fColor = vColor;
             }";
 
         public static readonly string FragmentSrc = @"
             #version 330 core
-            
+            in vec4 fColor;            
+
             out vec4 Color;
             void main()
             {
-                Color = vec4(0, 1, 1, 1);
+                Color = fColor;
             }";
         #endregion OpenGL shader
 
@@ -34,26 +38,63 @@ namespace Rasterizer
 
         public static (Vector2 pos, VertexToFragment vertToFrag) VertexShader(VertexInput input)
         {
-            return (input.Position, new VertexToFragment());
+            return (input.Position, new VertexToFragment(input.Position, input.Color));
         }
 
         public static Color4 FragmentShader(VertexToFragment input)
         {
-            return new Color4(0f, 1f, 1f, 1f);
+            return input.Color;
         }
         
-        public readonly struct VertexInput
+        public unsafe struct VertexInput
         {
-            public Vector2 Position { get; }
+            public fixed float Data[6];
+            
+            public Vector2 Position => new Vector2(Data[0], Data[1]);
+            public Color4 Color => new Color4(Data[2], Data[3], Data[4], Data[5]);
 
-            public VertexInput(Vector2 pos)
+            public VertexInput(Vector2 pos, Color4 color)
             {
-                Position = pos;
+                // Data = new[] {pos.X, pos.Y, color.R, color.G, color.B, color.A};
+                Data[0] = pos.X;
+                Data[1] = pos.Y;
+                Data[2] = color.R;
+                Data[3] = color.G;
+                Data[4] = color.B;
+                Data[5] = color.A;
+            }
+
+            public VertexInput(float x, float y, float r, float g, float b, float a) :
+                this(new Vector2(x, y), new Color4(r, g, b, a))
+            {
+                
             }
         }
 
-        public readonly struct VertexToFragment
+        
+        public unsafe struct VertexToFragment
         {
+            public fixed float Data[6];
+            
+            public Vector2 Position => new Vector2(Data[0], Data[1]);
+            public Color4 Color => new Color4(Data[2], Data[3], Data[4], Data[5]);
+
+            public VertexToFragment(Vector2 pos, Color4 color)
+            {
+                // Data = new[] {pos.X, pos.Y, color.R, color.G, color.B, color.A};
+                Data[0] = pos.X;
+                Data[1] = pos.Y;
+                Data[2] = color.R;
+                Data[3] = color.G;
+                Data[4] = color.B;
+                Data[5] = color.A;
+            }
+
+            public VertexToFragment(float x, float y, float r, float g, float b, float a) :
+                this(new Vector2(x, y), new Color4(r, g, b, a))
+            {
+                
+            }
         }
 
         #endregion Custom cpu shader

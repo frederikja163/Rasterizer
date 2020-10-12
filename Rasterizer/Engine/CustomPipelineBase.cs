@@ -35,7 +35,6 @@ namespace Rasterizer.Engine
 
         protected unsafe CustomPipelineBase(string title) : base(title)
         {
-            var triangle = new Triangle(-1, -1, 3, -1, -1, 3);
             _shader = Utility.CreateShader(in VertexSrc, in FragmentSrc);
             
             _vao = GL.GenVertexArray();
@@ -43,9 +42,9 @@ namespace Rasterizer.Engine
             
             _vbo = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo);
-            GL.BufferData(BufferTarget.ArrayBuffer, sizeof(Triangle), ref triangle, BufferUsageHint.StaticDraw);
+            GL.BufferData(BufferTarget.ArrayBuffer, sizeof(float) * 2 * 3, new []{-1f, -1f, 3f, -1f, -1f, 3f}, BufferUsageHint.StaticDraw);
             GL.EnableVertexAttribArray(0);
-            GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, sizeof(Triangle) / 3, 0);
+            GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, sizeof(float) * 2, 0);
 
             _texture = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2D, _texture);

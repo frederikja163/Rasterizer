@@ -21,6 +21,8 @@ namespace Rasterizer.Engine
             GL.BufferData(BufferTarget.ArrayBuffer, size, new float[size], BufferUsageHint.StaticDraw);
             GL.EnableVertexAttribArray(0);
             GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, sizeof(Triangle) / 3, 0);
+            GL.EnableVertexAttribArray(1);
+            GL.VertexAttribPointer(1, 4, VertexAttribPointerType.Float, false, sizeof(Triangle) / 3, sizeof(float) * 2);
         }
 
         protected override unsafe void OnRender(Triangle[] triangles)

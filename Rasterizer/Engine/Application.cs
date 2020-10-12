@@ -25,9 +25,13 @@ namespace Rasterizer.Engine
             {
                 return (random.Next() / (float)int.MaxValue) * 2 - 1;
             }
+            Config.VertexInput RandVert()
+            {
+                return new Config.VertexInput(Rand(), Rand(), Rand(), Rand(), Rand(), 1);
+            }
             for (int i = 0; i < _triangle.Length; i++)
             {
-                _triangle[i] = new Triangle(Rand(), Rand(), Rand(), Rand(), Rand(), Rand());
+                _triangle[i] = new Triangle(RandVert(), RandVert(), RandVert());
             }
             _openGlRasterizer = new OpenGLRasterizer();
             _customPipelineBase = new Pipeline("custom pipeline");

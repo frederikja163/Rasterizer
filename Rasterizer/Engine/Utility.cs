@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenTK.Graphics.OpenGL4;
+using OpenTK.Mathematics;
 
 namespace Rasterizer.Engine
 {
@@ -13,6 +14,16 @@ namespace Rasterizer.Engine
         public static float Min(float v1, float v2, float v3)
         {
             return MathF.Min(v1, MathF.Min(v2, v3));
+        }
+        
+        public static Vector2 Max(Vector2 v1, Vector2 v2, Vector2 v3)
+        {
+            return new Vector2(Max(v1.X, v2.X, v3.X), Max(v1.Y, v2.Y, v3.Y));
+        }
+        
+        public static Vector2 Min(Vector2 v1, Vector2 v2, Vector2 v3)
+        {
+            return new Vector2(Min(v1.X, v2.X, v3.X), Min(v1.Y, v2.Y, v3.Y));
         }
         
         public static int CreateShader(in string vertexSrc, in string fragmentSrc)

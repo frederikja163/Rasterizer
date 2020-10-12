@@ -16,10 +16,12 @@ namespace Rasterizer
     public sealed class Pipeline : CustomPipelineBase
     {
         private Framebuffer _framebuffer;
+        private RasterizerV1 _rasterizer;
         
         public Pipeline(string title) : base(title)
         {
             _framebuffer = new Framebuffer(Config.Width, Config.Height);
+            _rasterizer = new RasterizerV1(ref _framebuffer);
         }
 
         protected override void OnRender(Triangle[] triangles)
@@ -39,8 +41,12 @@ namespace Rasterizer
                 var vert1 = Config.VertexShader(triangle.Vert1);
                 var vert2 = Config.VertexShader(triangle.Vert2);
                 var vert3 = Config.VertexShader(triangle.Vert3);
+
+                vert1.pos = (vert1.pos + Vector2.One) * 0.5f * new Vector2(Config.Width, Config.Height);
+                vert2.pos = (vert2.pos + Vector2.One) * 0.5f * new Vector2(Config.Width, Config.Height);
+                vert3.pos = (vert3.pos + Vector2.One) * 0.5f * new Vector2(Config.Width, Config.Height);
                 
-                //Rasterize
+                _rasterizer.Rasterize(vert1, vert2, vert3);
             }
         }
 
